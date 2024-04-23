@@ -46,10 +46,14 @@ pipeline {
     }
     post {
         always {
-            mail to: 'your-email@example.com',
-                 subject: "Stage Completed: ${currentBuild.fullDisplayName}",
-                 body: "Check console output at ${env.BUILD_URL} to view the results.",
-                 attachLog: true
+            emailext(
+                to: 's223053304@deakin.edu.au',
+                subject: "Stage Completed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """Job '${env.JOB_NAME} #${env.BUILD_NUMBER}' is complete.
+                         Check console output at ${env.BUILD_URL} to view the results.
+                         Build status: ${currentBuild.currentResult}""",
+                attachLog: true
+            )
         }
     }
 }
