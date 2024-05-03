@@ -47,7 +47,7 @@ pipeline {
     post {
         always {
             emailext(
-                to: 's223053304@deakin.edu.au',
+                to: 'tpwarren@gmail.com',
                 subject: "Stage Completed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """Job '${env.JOB_NAME} #${env.BUILD_NUMBER}' is complete.
                          Check console output at ${env.BUILD_URL} to view the results.
