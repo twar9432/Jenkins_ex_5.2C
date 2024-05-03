@@ -10,7 +10,18 @@ pipeline {
         stage('Unit and Integration Tests') {
             steps {
                 echo "Run unit and integration tests using JUnit and Selenium."
-                // Tools: JUnit, Selenium
+            }
+            post {
+                always {
+                    emailext(
+                        to: 'tpwarren@gmail.com',
+                        subject: "Test Stage Completed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """Job '${env.JOB_NAME} #${env.BUILD_NUMBER}' Test Stage is complete.
+                                 Check console output at ${env.BUILD_URL} to view the results.
+                                 Build status: ${currentBuild.currentResult}""",
+                        attachLog: true
+                    )
+                }
             }
         }
         stage('Code Analysis') {
@@ -22,7 +33,18 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo "Perform security scan using OWASP ZAP."
-                // Tool: OWASP ZAP
+            }
+            post {
+                always {
+                    emailext(
+                        to: 'tpwarren@gmail.com',
+                        subject: "Security Scan Stage Completed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                        body: """Job '${env.JOB_NAME} #${env.BUILD_NUMBER}' Security Scan Stage is complete.
+                                 Check console output at ${env.BUILD_URL} to view the results.
+                                 Build status: ${currentBuild.currentResult}""",
+                        attachLog: true
+                    )
+                }
             }
         }
         stage('Deploy to Staging') {
@@ -42,18 +64,6 @@ pipeline {
                 echo "Deploy to AWS EC2 production instance."
                 // Tool: AWS EC2, Jenkins Deploy plugin
             }
-        }
-    }
-    post {
-        always {
-            emailext(
-                to: 'tpwarren@gmail.com',
-                subject: "Stage Completed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """Job '${env.JOB_NAME} #${env.BUILD_NUMBER}' is complete.
-                         Check console output at ${env.BUILD_URL} to view the results.
-                         Build status: ${currentBuild.currentResult}""",
-                attachLog: true
-            )
         }
     }
 }
